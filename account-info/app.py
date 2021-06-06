@@ -39,11 +39,12 @@ def lambda_handler(event, context):
   print("[INFO] Retrieving secrets from secretsmanager...")
   secrets = get_secret(secret_name, aws_region)
 
-  organization_id = secrets['organizationId']
   api_url = secrets['apiUrl']
   client_id = secrets['clientId']
-  token_endpoint = secrets['tokenEndpoint']
   client_secret = secrets['clientSecret']
+  organization_id = secrets['organizationId']
+  token_endpoint = secrets['tokenEndpoint']
+
   query_string='''
     query listAccount($organizationId: String!) {
       listAccountsForOrganization(organizationId: $organizationId) {
@@ -74,6 +75,7 @@ def lambda_handler(event, context):
     'Authorization': access_token,
     'Content-Type': 'application/json'
   }
+
   try:
     print("[INFO] Retrieving accounts...")
     response = requests.post(api_url, headers=headers, data=json.dumps(query))
